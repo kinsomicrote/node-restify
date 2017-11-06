@@ -263,6 +263,20 @@ describe('audit logger', function() {
             })
         );
 
+        SERVER.pre(function(req, res, next) {
+            next();
+        });
+        SERVER.pre(function(req, res, next) {
+            next();
+        });
+
+        SERVER.use(function(req, res, next) {
+            next();
+        });
+        SERVER.use(function(req, res, next) {
+            next();
+        });
+
         SERVER.get(
             '/audit',
             function(req, res, next) {
@@ -291,6 +305,30 @@ describe('audit logger', function() {
                 ringbuffer.records.length,
                 1,
                 'should only have 1 log record'
+            );
+            assertIsAtLeastWithTolerate(
+                record.req.timers['pre-0'],
+                0,
+                TOLERATED_MICROSECONDS,
+                'pre-0'
+            );
+            assertIsAtLeastWithTolerate(
+                record.req.timers['pre-1'],
+                0,
+                TOLERATED_MICROSECONDS,
+                'pre-1'
+            );
+            assertIsAtLeastWithTolerate(
+                record.req.timers['use-0'],
+                0,
+                TOLERATED_MICROSECONDS,
+                'use-0'
+            );
+            assertIsAtLeastWithTolerate(
+                record.req.timers['use-1'],
+                0,
+                TOLERATED_MICROSECONDS,
+                'use-1'
             );
             assertIsAtLeastWithTolerate(
                 record.req.timers['handler-0'],
